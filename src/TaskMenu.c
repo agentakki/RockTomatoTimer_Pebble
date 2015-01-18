@@ -8,13 +8,7 @@ MenuLayer *menu_layer;
 char str1[] = "Noay";
 
 void draw_row_callback (GContext *ctx, Layer *cell_layer, MenuIndex *cell_index, void *callback_context) {
-//     char title[60];
-//     char format_str[] = "there are %i tasks";
-//     snprintf(title, sizeof(format_str), format_str, getNTtasks());
-//     menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", title, NULL);
-//     return;
     task_t *task = get_task(cell_index->row);
-//     task_t *task = NULL;
     char subtitle[35];
     char format_str[] = "Target: %i pomos, %i done";
     snprintf(subtitle, sizeof(format_str), format_str, task->nTarget, task->nCompleted);
@@ -23,31 +17,6 @@ void draw_row_callback (GContext *ctx, Layer *cell_layer, MenuIndex *cell_index,
     else
       menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", "subtitle", NULL);
     return;
-  
-    // Which row is it?
-    switch (cell_index->row) {
-    case 0:
-        menu_cell_basic_draw(ctx, cell_layer, str1, "is good at hacking pebble watches for fun", NULL);
-        break;
-    case 1:
-        menu_cell_basic_draw(ctx, cell_layer, "2. Orange", "Peel first!", NULL);
-        break;
-    case 2:
-        menu_cell_basic_draw(ctx, cell_layer, "3. Pear", "Teardrop shaped!", NULL);
-        break;
-    case 3:
-        menu_cell_basic_draw(ctx, cell_layer, "4. Banana", "Can be a gun!", NULL);
-        break;
-    case 4:
-        menu_cell_basic_draw(ctx, cell_layer, "5. Tomato", "Extremely versatile!", NULL);
-        break;
-    case 5:
-        menu_cell_basic_draw(ctx, cell_layer, "6. Grape", "Bunches of 'em!", NULL);
-        break;
-    case 6:
-        menu_cell_basic_draw(ctx, cell_layer, "7. Melon", "Only three left!", NULL);
-        break;
-    }
 }
 
 uint16_t num_rows_callback (MenuLayer *menu_layer, uint16_t section_index, void *callback_context) {
