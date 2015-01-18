@@ -15,9 +15,11 @@ typedef struct {
   int nCompleted;
 } task_t;
   
-task_t* get_tasks();
+task_t** get_tasks();
 
 task_t* get_task(int index);
+
+void free_tasks();
   
 /*
   When called, signals the iOS app that a pomo 

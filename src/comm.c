@@ -1,20 +1,20 @@
 #include <pebble.h>
 #include "comm.h"
   
-task_t *tasks = NULL; // list of tasks, global to this file, 
+task_t **tasks = NULL; // list of tasks, global to this file, 
                       // should never be accessed directly other
                       // than by functions in this file
 
 int nTasks = 0;
 
-task_t* get_tasks() {
+task_t** get_tasks() {
   return tasks;
 }
 
 task_t* get_task(int index) {
   if (index < 0 || nTasks < index)
     return NULL;
-  return &tasks[index];
+  return tasks[index];
 }
 
 void pomo_completed(int t_id) {
@@ -31,6 +31,21 @@ void pomo_completed(int t_id) {
   dict_write_int(iter, 1, &t_id, sizeof(int), false);
   dict_write_end(iter);
   app_message_outbox_send();
+  
+}
+
+void push_task(Tuple *t, DictionaryIterator *iterator) {
+  // TODO: WHAT IF THE LIST IS FULL
+  
+  task_t *new_task = (task_t*) malloc(sizeof(task_t));
+  
+  new_task->t_id = t->value->int32;
+  t = dict_read_next(iterator);
+  strcpy(new_task->name, t->value->cstring);
+  t = dict_read_next(iterator);
+  new_task->nTarget = t->value->int32;
+  t = dict_read_next(iterator);
+  new_task->nCompleted = t->value->int32;
   
 }
 
@@ -51,6 +66,15 @@ void list_request() {
   
 }
 
+void free_tasks() {
+  if (tasks != NULL) {
+    task_t **curr = tasks;
+    while (*curr != NULL) 
+      free (*curr);
+    free (tasks);
+  }
+}
+
 void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 
   // Get the first pair
@@ -59,10 +83,14 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   if (!strcmp(t->value->cstring, LIST_RESPONSE)) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received LIST_RESPONSE");
     t = dict_read_next(iterator);
+    free_tasks();
+    tasks = calloc(t->value->int32, sizeof(task_t*));
     APP_LOG(APP_LOG_LEVEL_DEBUG, "expecting %ld tasks", t->value->int32);
   }
   else if (!strcmp(t->value->cstring, TASK)) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received TASK");
+    t = dict_read_next(iterator);
+    push_task(t, iterator);
   }
   else {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received unkown message from iOS app ...");
