@@ -1,7 +1,7 @@
 #include <pebble.h>
 #include "TaskMenu.h"
 #include "Timer.h"
-
+#include "comm.h"
   
 Window *window;
 MenuLayer *menu_layer;
@@ -56,6 +56,13 @@ void select_click_callback (MenuLayer *menu_layer, MenuIndex *cell_index, void *
 }
 
 void window_load1 (Window *window){
+  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "loading task menu");
+  
+  list_request();
+  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "should be done with list_request now");
+  
   GRect bounds = layer_get_bounds(window_get_root_layer(window));
   menu_layer = menu_layer_create(bounds);
   menu_layer_set_click_config_onto_window(menu_layer, window);

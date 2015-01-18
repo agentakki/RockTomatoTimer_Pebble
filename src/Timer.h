@@ -1,4 +1,7 @@
 #pragma once
+  
+#define WORK_SECS 4
+#define BREAK_SECS 2
 
 //functions
 void select_click_handler(ClickRecognizerRef recognizer, void *context);
