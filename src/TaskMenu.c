@@ -8,63 +8,25 @@ MenuLayer *menu_layer;
 char str1[] = "Noay";
 
 void draw_row_callback (GContext *ctx, Layer *cell_layer, MenuIndex *cell_index, void *callback_context) {
-    char title[60];
-    char format_str[] = "there are %i tasks";
-    snprintf(title, sizeof(format_str), format_str, getNTtasks());
-    menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", title, NULL);
-    return;
     task_t *task = get_task(cell_index->row);
-    if (task != NULL)
-      menu_cell_basic_draw(ctx, cell_layer, task->name, "subtitle", NULL);
+    char subtitle[35];
+    char format_str[] = "Target: %i pomos, %i done";
+    snprintf(subtitle, sizeof(format_str), format_str, task->nTarget, task->nCompleted);
+    if (getNTtasks() != 0)
+      menu_cell_basic_draw(ctx, cell_layer, task->name, subtitle, NULL);
     else
       menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", "subtitle", NULL);
     return;
-  
-    // Which row is it?
-    switch (cell_index->row) {
-    case 0:
-        menu_cell_basic_draw(ctx, cell_layer, str1, "is good at hacking pebble watches for fun", NULL);
-        break;
-    case 1:
-        menu_cell_basic_draw(ctx, cell_layer, "2. Orange", "Peel first!", NULL);
-        break;
-    case 2:
-        menu_cell_basic_draw(ctx, cell_layer, "3. Pear", "Teardrop shaped!", NULL);
-        break;
-    case 3:
-        menu_cell_basic_draw(ctx, cell_layer, "4. Banana", "Can be a gun!", NULL);
-        break;
-    case 4:
-        menu_cell_basic_draw(ctx, cell_layer, "5. Tomato", "Extremely versatile!", NULL);
-        break;
-    case 5:
-        menu_cell_basic_draw(ctx, cell_layer, "6. Grape", "Bunches of 'em!", NULL);
-        break;
-    case 6:
-        menu_cell_basic_draw(ctx, cell_layer, "7. Melon", "Only three left!", NULL);
-        break;
-    }
 }
 
 uint16_t num_rows_callback (MenuLayer *menu_layer, uint16_t section_index, void *callback_context) {
-  //menu_layer_reload_data(menu_layer);
-  return getNTtasks() + 1;
+//   menu_layer_reload_data(menu_layer);
+  return getNTtasks();
 }
 
 
 void select_click_callback (MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context) {
-/*  int which = cell_index->row;
-  uint32_t segments[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  for (int i = 0; i <= which; ++i) {
-    segments[2*i] = 200;
-    segments[(2*i)+1] = 100;
-  }
-  VibePattern pattern = {
-    .durations = segments,
-    .num_segments = 16
-  };
-  vibes_enqueue_custom_pattern(pattern);
-*/
+  menu_layer_reload_data(menu_layer);
   timer_init();
 }
 
@@ -86,6 +48,7 @@ void window_load1 (Window *window){
   };
   menu_layer_set_callbacks(menu_layer, NULL, callbacks);
   layer_add_child(window_get_root_layer(window), menu_layer_get_layer(menu_layer));
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "done task menu");
 }
 
 void window_unload1 (Window *window) {

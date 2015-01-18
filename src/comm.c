@@ -14,14 +14,17 @@ task_t** get_tasks() {
 }
 
 int getNTtasks() {
+  APP_LOG(APP_LOG_LEVEL_INFO, "nTasks : %i", nTasks);
   return nTasks;
 }
 
 task_t* get_task(int index) {
+  APP_LOG(APP_LOG_LEVEL_INFO, "get_task() called!");
   if (index < 0 || nTasks < index) {
     APP_LOG(APP_LOG_LEVEL_ERROR, "get_task OUT OF RANGE");
     return NULL;
   }
+  APP_LOG(APP_LOG_LEVEL_INFO, "get_task: %s", tasks[index]->name);
   return tasks[index];
 }
 
@@ -43,8 +46,12 @@ void pomo_completed(int t_id) {
 }
 
 void push_task(Tuple *t, DictionaryIterator *iterator) {
-  // TODO: WHAT IF THE LIST IS FULL
   
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "beginning push_task()");
+  if (nTasks == sizeof(tasks)/(sizeof(task_t*))) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "no more room to push tasks");
+//     return;
+  }
   task_t *new_task = (task_t*) malloc(sizeof(task_t));
   
   new_task->t_id = t->value->int32;
@@ -57,7 +64,8 @@ void push_task(Tuple *t, DictionaryIterator *iterator) {
   tasks[nTasks] = new_task;
   ++nTasks;
   
-  APP_LOG(APP_LOG_LEVEL_INFO, "added task with name '%s'", tasks[nTasks-1]->name);
+  APP_LOG(APP_LOG_LEVEL_INFO, "added task with name '%s', %i pCompl, %i pTar", 
+              new_task->name, new_task->nCompleted, new_task->nTarget);
 }
 
 void list_request() {
@@ -94,7 +102,7 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   if (!strcmp(t->value->cstring, LIST_RESPONSE)) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received LIST_RESPONSE");
     t = dict_read_next(iterator);
-    free_tasks();
+//     free_tasks();
     tasks = calloc(t->value->int32, sizeof(task_t*));
     nTasks = 0;
     expectedTasks = t->value->int32;

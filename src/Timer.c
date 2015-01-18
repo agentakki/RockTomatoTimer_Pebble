@@ -104,7 +104,7 @@ void update_timer(void* content) {
       is_work = false;
     }
     if(remaining_time <= 0) {
-      pomo_completed(42);
+      pomo_completed(1);
       update_feedback(s_res_play_image, "Done!");
 
       timer_on = false;
