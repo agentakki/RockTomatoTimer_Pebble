@@ -47,6 +47,7 @@ void push_task(Tuple *t, DictionaryIterator *iterator) {
   t = dict_read_next(iterator);
   new_task->nCompleted = t->value->int32;
   
+  ++nTasks;
 }
 
 void list_request() {
@@ -85,10 +86,16 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
     t = dict_read_next(iterator);
     free_tasks();
     tasks = calloc(t->value->int32, sizeof(task_t*));
+    nTasks = 0;
     APP_LOG(APP_LOG_LEVEL_DEBUG, "expecting %ld tasks", t->value->int32);
   }
   else if (!strcmp(t->value->cstring, TASK)) {
+    
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received TASK");
+    APP_LOG(APP_LOG_LEVEL_INFO, "Here are the tasks:");
+    for (int i = 0; i < nTasks; ++i)
+      APP_LOG(APP_LOG_LEVEL_INFO, "id: %s", tasks[i]->name);
+    
     t = dict_read_next(iterator);
     push_task(t, iterator);
   }
