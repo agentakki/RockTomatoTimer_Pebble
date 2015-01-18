@@ -17,6 +17,8 @@ typedef struct {
   
 task_t** get_tasks();
 
+int getNTtasks();
+
 task_t* get_task(int index);
 
 void free_tasks();

@@ -8,6 +8,18 @@ MenuLayer *menu_layer;
 char str1[] = "Noay";
 
 void draw_row_callback (GContext *ctx, Layer *cell_layer, MenuIndex *cell_index, void *callback_context) {
+    char title[60];
+    char format_str[] = "there are %i tasks";
+    snprintf(title, sizeof(format_str), format_str, getNTtasks());
+    menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", title, NULL);
+    return;
+    task_t *task = get_task(cell_index->row);
+    if (task != NULL)
+      menu_cell_basic_draw(ctx, cell_layer, task->name, "subtitle", NULL);
+    else
+      menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", "subtitle", NULL);
+    return;
+  
     // Which row is it?
     switch (cell_index->row) {
     case 0:
@@ -35,7 +47,8 @@ void draw_row_callback (GContext *ctx, Layer *cell_layer, MenuIndex *cell_index,
 }
 
 uint16_t num_rows_callback (MenuLayer *menu_layer, uint16_t section_index, void *callback_context) {
-  return 7;
+  //menu_layer_reload_data(menu_layer);
+  return getNTtasks() + 1;
 }
 
 

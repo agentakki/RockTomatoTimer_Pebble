@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include <stdio.h>
 #include "comm.h"
   
 task_t **tasks = NULL; // list of tasks, global to this file, 
@@ -12,9 +13,15 @@ task_t** get_tasks() {
   return tasks;
 }
 
+int getNTtasks() {
+  return nTasks;
+}
+
 task_t* get_task(int index) {
-  if (index < 0 || nTasks < index)
+  if (index < 0 || nTasks < index) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "get_task OUT OF RANGE");
     return NULL;
+  }
   return tasks[index];
 }
 
@@ -49,6 +56,8 @@ void push_task(Tuple *t, DictionaryIterator *iterator) {
   new_task->nCompleted = t->value->int32;
   tasks[nTasks] = new_task;
   ++nTasks;
+  
+  APP_LOG(APP_LOG_LEVEL_INFO, "added task with name '%s'", tasks[nTasks-1]->name);
 }
 
 void list_request() {
