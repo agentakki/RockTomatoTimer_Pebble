@@ -20,24 +20,12 @@ void draw_row_callback (GContext *ctx, Layer *cell_layer, MenuIndex *cell_index,
 }
 
 uint16_t num_rows_callback (MenuLayer *menu_layer, uint16_t section_index, void *callback_context) {
-  //menu_layer_reload_data(menu_layer);
+//   menu_layer_reload_data(menu_layer);
   return getNTtasks();
 }
 
 
 void select_click_callback (MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context) {
-/*  int which = cell_index->row;
-  uint32_t segments[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  for (int i = 0; i <= which; ++i) {
-    segments[2*i] = 200;
-    segments[(2*i)+1] = 100;
-  }
-  VibePattern pattern = {
-    .durations = segments,
-    .num_segments = 16
-  };
-  vibes_enqueue_custom_pattern(pattern);
-*/
   timer_init();
 }
 

@@ -14,6 +14,7 @@ task_t** get_tasks() {
 }
 
 int getNTtasks() {
+  APP_LOG(APP_LOG_LEVEL_INFO, "nTasks : %i", nTasks);
   return nTasks;
 }
 
@@ -45,8 +46,12 @@ void pomo_completed(int t_id) {
 }
 
 void push_task(Tuple *t, DictionaryIterator *iterator) {
-  // TODO: WHAT IF THE LIST IS FULL
   
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "beginning push_task()");
+  if (nTasks == sizeof(tasks)/(sizeof(task_t*))) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "no more room to push tasks");
+//     return;
+  }
   task_t *new_task = (task_t*) malloc(sizeof(task_t));
   
   new_task->t_id = t->value->int32;
