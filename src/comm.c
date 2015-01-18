@@ -1,6 +1,22 @@
 #include <pebble.h>
 #include "comm.h"
   
+task_t *tasks = NULL; // list of tasks, global to this file, 
+                      // should never be accessed directly other
+                      // than by functions in this file
+
+int nTasks = 0;
+
+task_t* get_tasks() {
+  return tasks;
+}
+
+task_t* get_task(int index) {
+  if (index < 0 || nTasks < index)
+    return NULL;
+  return &tasks[index];
+}
+
 void pomo_completed(int t_id) {
   
   APP_LOG(APP_LOG_LEVEL_DEBUG, "sending pomo");
@@ -40,10 +56,10 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Get the first pair
   Tuple *t = dict_read_first(iterator);
   
-  //int nUnreceivedTasks = 0;
-  
   if (!strcmp(t->value->cstring, LIST_RESPONSE)) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received LIST_RESPONSE");
+    t = dict_read_next(iterator);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "expecting %ld tasks", t->value->int32);
   }
   else if (!strcmp(t->value->cstring, TASK)) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received TASK");
