@@ -6,6 +6,7 @@ task_t **tasks = NULL; // list of tasks, global to this file,
                       // than by functions in this file
 
 int nTasks = 0;
+int expectedTasks = 0;
 
 task_t** get_tasks() {
   return tasks;
@@ -46,7 +47,7 @@ void push_task(Tuple *t, DictionaryIterator *iterator) {
   new_task->nTarget = t->value->int32;
   t = dict_read_next(iterator);
   new_task->nCompleted = t->value->int32;
-  
+  tasks[nTasks] = new_task;
   ++nTasks;
 }
 
@@ -80,24 +81,32 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 
   // Get the first pair
   Tuple *t = dict_read_first(iterator);
-  
+
   if (!strcmp(t->value->cstring, LIST_RESPONSE)) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received LIST_RESPONSE");
     t = dict_read_next(iterator);
     free_tasks();
     tasks = calloc(t->value->int32, sizeof(task_t*));
     nTasks = 0;
+    expectedTasks = t->value->int32;
     APP_LOG(APP_LOG_LEVEL_DEBUG, "expecting %ld tasks", t->value->int32);
   }
   else if (!strcmp(t->value->cstring, TASK)) {
     
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received TASK");
-    APP_LOG(APP_LOG_LEVEL_INFO, "Here are the tasks:");
-    for (int i = 0; i < nTasks; ++i)
-      APP_LOG(APP_LOG_LEVEL_INFO, "id: %s", tasks[i]->name);
     
+      
     t = dict_read_next(iterator);
     push_task(t, iterator);
+    if(nTasks == expectedTasks)
+    {
+      APP_LOG(APP_LOG_LEVEL_INFO, "Here are the tasks:");
+      for(int i=0; i<nTasks; i++){
+        //APP_LOG(APP_LOG_LEVEL_INFO, "id: %i", i);
+             APP_LOG(APP_LOG_LEVEL_INFO, "id: %i %s", tasks[i]->t_id, tasks[i]->name);
+      }
+    }
+    
   }
   else {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received unkown message from iOS app ...");
