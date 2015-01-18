@@ -17,3 +17,5 @@ void timer_init(void);
 void handle_deinit(void);
 void window_load(Window *window);
 void window_unload(Window *window);
+
+void pass_variables(int pomos_remaining, int pomos_target, char* task_name);

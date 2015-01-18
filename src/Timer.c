@@ -7,6 +7,10 @@ Window *my_window;
 TextLayer *work_break_textlayer;
 TextLayer *timer_layer;
 
+static int pomos_remain;
+static int pomos_targ;
+static char* name_of_task;
+
 //UI generated code
 static GFont s_res_bitham_34_medium_numbers;
 static GFont s_res_gothic_14;
@@ -14,9 +18,9 @@ static GFont s_res_roboto_condensed_21;
 static GBitmap *s_res_play_image;
 static GBitmap *s_res_pause_image;
 static TextLayer *task_textlayer;
-static TextLayer *poms_left_textlayer;
+static TextLayer *pomos_left_textlayer;
 //static TextLayer *work_break_textlayer;
-static TextLayer *poms_num_textlayer;
+static TextLayer *pomos_num_textlayer;
 static BitmapLayer *play_pause_img;
 
 //static AppTimer* timer = NULL;
@@ -174,17 +178,18 @@ void window_load(Window *window) {
   task_textlayer = text_layer_create(GRect(6, 7, 131, 32));
   text_layer_set_background_color(task_textlayer, GColorBlack);
   text_layer_set_text_color(task_textlayer, GColorWhite);
-  text_layer_set_text(task_textlayer, "Study CS 131");
+  //text_layer_set_text(task_textlayer, "Study CS 131");
+  text_layer_set_text(task_textlayer, name_of_task);
   text_layer_set_font(task_textlayer, s_res_gothic_14);
   layer_add_child(window_get_root_layer(my_window), (Layer *)task_textlayer);
   
-  // poms_left_textlayer
-  poms_left_textlayer = text_layer_create(GRect(34, 122, 56, 20));
-  text_layer_set_background_color(poms_left_textlayer, GColorBlack);
-  text_layer_set_text_color(poms_left_textlayer, GColorWhite);
-  text_layer_set_text(poms_left_textlayer, "Poms Left:");
-  text_layer_set_font(poms_left_textlayer, s_res_gothic_14);
-  layer_add_child(window_get_root_layer(my_window), (Layer *)poms_left_textlayer);
+  // pomos_left_textlayer
+  pomos_left_textlayer = text_layer_create(GRect(34, 122, 56, 20));
+  text_layer_set_background_color(pomos_left_textlayer, GColorBlack);
+  text_layer_set_text_color(pomos_left_textlayer, GColorWhite);
+  text_layer_set_text(pomos_left_textlayer, "pomos Left:");
+  text_layer_set_font(pomos_left_textlayer, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(my_window), (Layer *)pomos_left_textlayer);
   
   // work_break_textlayer
   work_break_textlayer = text_layer_create(GRect(17, 38, 100, 30));
@@ -196,13 +201,18 @@ void window_load(Window *window) {
   layer_add_child(window_get_root_layer(my_window), (Layer *)work_break_textlayer);
   
   //TODO: Need to fit in //CURRENTLY STATIC - HOW TO GET IT DYNAMIC
-  // poms_num_textlayer 
-  poms_num_textlayer = text_layer_create(GRect(94, 122, 24, 20));
-  text_layer_set_background_color(poms_num_textlayer, GColorBlack);
-  text_layer_set_text_color(poms_num_textlayer, GColorWhite);
-  text_layer_set_text(poms_num_textlayer, "9");
-  text_layer_set_font(poms_num_textlayer, s_res_gothic_14);
-  layer_add_child(window_get_root_layer(my_window), (Layer *)poms_num_textlayer);
+  // pomos_num_textlayer 
+  pomos_num_textlayer = text_layer_create(GRect(94, 122, 24, 20));
+  text_layer_set_background_color(pomos_num_textlayer, GColorBlack);
+  text_layer_set_text_color(pomos_num_textlayer, GColorWhite);
+  
+  //text_layer_set_text(pomos_num_textlayer, "9");
+  char *pomos_nums = "0/0";
+  snprintf(pomos_nums, 6, "%0i:%0i", pomos_remain, pomos_targ);
+  text_layer_set_text(pomos_num_textlayer, pomos_nums); 
+  
+  text_layer_set_font(pomos_num_textlayer, s_res_gothic_14);
+  layer_add_child(window_get_root_layer(my_window), (Layer *)pomos_num_textlayer);
   
   //TODO: Need to fit in ASK: What's the best way to change the image without reloading every frame?
   // play_pause_img
@@ -220,12 +230,18 @@ void window_unload(Window *window) {
   
   //text_layer_destroy(time_display_textlayer);
   text_layer_destroy(task_textlayer);
-  text_layer_destroy(poms_left_textlayer);
+  text_layer_destroy(pomos_left_textlayer);
   text_layer_destroy(work_break_textlayer);
-  text_layer_destroy(poms_num_textlayer);
+  text_layer_destroy(pomos_num_textlayer);
   bitmap_layer_destroy(play_pause_img);
   gbitmap_destroy(s_res_play_image);
   gbitmap_destroy(s_res_pause_image);
+}
+
+void pass_variables(int pomos_remaining, int pomos_target, char* task_name) {
+  pomos_remain = pomos_remaining;
+  pomos_targ = pomos_target;
+  name_of_task = task_name; //MESSING THE POINTER UP TODO
 }
 
 

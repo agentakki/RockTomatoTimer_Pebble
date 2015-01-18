@@ -27,6 +27,14 @@ uint16_t num_rows_callback (MenuLayer *menu_layer, uint16_t section_index, void 
 
 void select_click_callback (MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context) {
   menu_layer_reload_data(menu_layer);
+  
+  int which = cell_index->row;
+  
+  char* taask_name = get_task(which)->name;
+  int pomos_target = get_task(which)->nTarget;
+  int pomos_remaining = pomos_target - get_task(which)->nCompleted;
+  
+  pass_variables(pomos_remaining, pomos_target, taask_name);
   timer_init();
 }
 
