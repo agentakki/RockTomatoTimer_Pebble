@@ -26,6 +26,7 @@ uint16_t num_rows_callback (MenuLayer *menu_layer, uint16_t section_index, void 
 
 
 void select_click_callback (MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context) {
+  menu_layer_reload_data(menu_layer);
   timer_init();
 }
 
