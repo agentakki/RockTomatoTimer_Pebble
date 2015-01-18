@@ -59,7 +59,8 @@ void push_task(Tuple *t, DictionaryIterator *iterator) {
   tasks[nTasks] = new_task;
   ++nTasks;
   
-  APP_LOG(APP_LOG_LEVEL_INFO, "added task with name '%s'", tasks[nTasks-1]->name);
+  APP_LOG(APP_LOG_LEVEL_INFO, "added task with name '%s', %i pCompl, %i pTar", 
+              new_task->name, new_task->nCompleted, new_task->nTarget);
 }
 
 void list_request() {

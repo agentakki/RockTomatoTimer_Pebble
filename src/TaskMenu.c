@@ -15,8 +15,11 @@ void draw_row_callback (GContext *ctx, Layer *cell_layer, MenuIndex *cell_index,
 //     return;
     task_t *task = get_task(cell_index->row);
 //     task_t *task = NULL;
+    char subtitle[35];
+    char format_str[] = "Target: %i pomos, %i done";
+    snprintf(subtitle, sizeof(format_str), format_str, task->nTarget, task->nCompleted);
     if (getNTtasks() != 0)
-      menu_cell_basic_draw(ctx, cell_layer, task->name, "subtitle", NULL);
+      menu_cell_basic_draw(ctx, cell_layer, task->name, subtitle, NULL);
     else
       menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", "subtitle", NULL);
     return;
