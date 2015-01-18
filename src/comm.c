@@ -3,7 +3,7 @@
 
 void pomo_completed(int t_id) {
   
-  APP_LOG(APP_LOG_LEVEL_ERROR, "sending pomo");
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "sending pomo");
   
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
@@ -17,7 +17,7 @@ void pomo_completed(int t_id) {
 
 void list_request() {
   
-  APP_LOG(APP_LOG_LEVEL_ERROR, "sending list request");
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "sending list request");
  
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
@@ -36,22 +36,22 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   //int nUnreceivedTasks = 0;
   
   if (!strcmp(t->value->cstring, LIST_RESPONSE)) {
-    APP_LOG(APP_LOG_LEVEL_ERROR, "received LIST_RESPONSE");
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "received LIST_RESPONSE");
   }
   else if (!strcmp(t->value->cstring, TASK)) {
-    APP_LOG(APP_LOG_LEVEL_ERROR, "received TASK");
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "received TASK");
   }
   else {
-    APP_LOG(APP_LOG_LEVEL_ERROR, "received unkown message from iOS app ...");
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "received unkown message from iOS app ...");
   }
 }
 
 void inbox_dropped_callback(AppMessageResult reason, void *context) {
-  APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped!");
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Message dropped!");
 }
 
 void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
-  APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed!");
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Outbox send failed!");
 }
 
 void outbox_sent_callback(DictionaryIterator *iterator, void *context) {

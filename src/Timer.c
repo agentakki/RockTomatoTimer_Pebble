@@ -1,7 +1,7 @@
 #include <pebble.h>
 #include "Timer.h"
 #include "TaskMenu.h"
-
+#include "comm.h"
   
 Window *my_window;
 TextLayer *work_break_textlayer;
@@ -25,8 +25,8 @@ bool timer_on = false;
 bool is_work = false; 
 
 //Standard times
-int work_duration = 25 * 1000; //CHANGE BACK TO MINUTES
-int brk_duration = 5 * 1000; //CHANGE BACK TO MINUTES
+int work_duration = WORK_SECS * 1000; //CHANGE BACK TO MINUTES
+int brk_duration = BREAK_SECS * 1000; //CHANGE BACK TO MINUTES
 
 //function definitions
 void select_click_handler(ClickRecognizerRef recognizer, void *context) {
@@ -104,6 +104,7 @@ void update_timer(void* content) {
       is_work = false;
     }
     if(remaining_time <= 0) {
+      pomo_completed(42);
       update_feedback(s_res_play_image, "Done!");
 
       timer_on = false;
