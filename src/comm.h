@@ -1,5 +1,6 @@
 #pragma once
 #define KEY_DATA 5 // DELETE ME
+#define MAX_NAME_LEN 60
   
 #define LIST_RESPONSE "LIST_RESPONSE"
 #define TASK "TASK"
@@ -7,6 +8,17 @@
 #define POMO_COMPLETE "POMO_COMPLETE"
 #define LIST_REQUEST "LIST_REQUEST"
 
+typedef struct {
+  int t_id;
+  char name[MAX_NAME_LEN];
+  int nTarget;
+  int nCompleted;
+} task_t;
+  
+task_t* get_tasks();
+
+task_t* get_task(int index);
+  
 /*
   When called, signals the iOS app that a pomo 
   has been completed for the task with id t_id
