@@ -18,10 +18,12 @@ int getNTtasks() {
 }
 
 task_t* get_task(int index) {
+  APP_LOG(APP_LOG_LEVEL_INFO, "get_task() called!");
   if (index < 0 || nTasks < index) {
     APP_LOG(APP_LOG_LEVEL_ERROR, "get_task OUT OF RANGE");
     return NULL;
   }
+  APP_LOG(APP_LOG_LEVEL_INFO, "get_task: %s", tasks[index]->name);
   return tasks[index];
 }
 
@@ -94,7 +96,7 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   if (!strcmp(t->value->cstring, LIST_RESPONSE)) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "received LIST_RESPONSE");
     t = dict_read_next(iterator);
-    free_tasks();
+//     free_tasks();
     tasks = calloc(t->value->int32, sizeof(task_t*));
     nTasks = 0;
     expectedTasks = t->value->int32;

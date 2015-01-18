@@ -8,13 +8,14 @@ MenuLayer *menu_layer;
 char str1[] = "Noay";
 
 void draw_row_callback (GContext *ctx, Layer *cell_layer, MenuIndex *cell_index, void *callback_context) {
-    char title[60];
-    char format_str[] = "there are %i tasks";
-    snprintf(title, sizeof(format_str), format_str, getNTtasks());
-    menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", title, NULL);
-    return;
+//     char title[60];
+//     char format_str[] = "there are %i tasks";
+//     snprintf(title, sizeof(format_str), format_str, getNTtasks());
+//     menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", title, NULL);
+//     return;
     task_t *task = get_task(cell_index->row);
-    if (task != NULL)
+//     task_t *task = NULL;
+    if (getNTtasks() != 0)
       menu_cell_basic_draw(ctx, cell_layer, task->name, "subtitle", NULL);
     else
       menu_cell_basic_draw(ctx, cell_layer, "IS NULL :(", "subtitle", NULL);
@@ -48,7 +49,7 @@ void draw_row_callback (GContext *ctx, Layer *cell_layer, MenuIndex *cell_index,
 
 uint16_t num_rows_callback (MenuLayer *menu_layer, uint16_t section_index, void *callback_context) {
   //menu_layer_reload_data(menu_layer);
-  return getNTtasks() + 1;
+  return getNTtasks();
 }
 
 
@@ -86,6 +87,7 @@ void window_load1 (Window *window){
   };
   menu_layer_set_callbacks(menu_layer, NULL, callbacks);
   layer_add_child(window_get_root_layer(window), menu_layer_get_layer(menu_layer));
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "done task menu");
 }
 
 void window_unload1 (Window *window) {
