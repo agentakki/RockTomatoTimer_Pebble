@@ -1,13 +1,16 @@
 #include <pebble.h>
 #include "comm.h"
-
+  
 void pomo_completed(int t_id) {
   
   APP_LOG(APP_LOG_LEVEL_DEBUG, "sending pomo");
   
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
-  if (iter == NULL) return;
+  if (iter == NULL){
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "iter is null in pomo_completed");
+    return;
+  } 
   dict_write_cstring(iter, 0, POMO_COMPLETE);
   dict_write_int(iter, 1, &t_id, sizeof(int), false);
   dict_write_end(iter);
@@ -21,7 +24,11 @@ void list_request() {
  
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
-  if (iter == NULL) return;
+  if (iter == NULL){
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "iter is null in list_request");
+    return;
+  } 
+
   dict_write_cstring(iter, 0, LIST_REQUEST);
   dict_write_end(iter);
   app_message_outbox_send();
